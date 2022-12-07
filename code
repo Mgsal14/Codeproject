@@ -1,0 +1,58 @@
+//tutorial followed: https://www.youtube.com/watch?v=UIlzIwqmOYE&ab_channel=gasparcoding
+//images created by me
+//all image files can be found here: https://github.com/Mgsal14/Codeproject
+
+
+
+PImage backpic, birdpic, wallpic, welcomescreen;
+int game, score, highscore, x, y, vertical, wallx[] = new int[2], wally[] =new int[2];
+void setup() {
+   backpic =loadImage("https://raw.githubusercontent.com/Mgsal14/Codeproject/main/3703A456-324D-4D14-A882-FF6552ED280E.png"); //changed all images to images I created and uploaded through github
+   birdpic =loadImage("https://raw.githubusercontent.com/Mgsal14/Codeproject/main/D302AFB4-5B99-40C5-865D-B555B3396776.png"); //I wanted my angel to be bigger so I had to play with the dimensions of my files a lot, they are all included in the github folder
+   wallpic =loadImage("https://raw.githubusercontent.com/Mgsal14/Codeproject/main/3C791111-1C49-45B1-857A-03F28DC98F6F.png");
+   welcomescreen=loadImage("https://raw.githubusercontent.com/Mgsal14/Codeproject/main/904586B2-F571-4654-BB50-C61CE1897935.png");
+   game = 1; score = 0; highscore = 0; x = -200; vertical = 0; 
+  size(600,800);
+  fill(255,255,255); //changed from black to white
+  textSize(35); //changed from 20
+}
+void draw() { 
+  if(game == 0) {
+    imageMode(CORNER);
+    image(backpic, x, 0);
+    image(backpic, x+backpic.width, 0);
+    x -= 5;
+    vertical += 1;
+    y += vertical;
+    if(x == -1800) x = 0;
+    for(int i = 0 ; i < 2; i++) {
+      imageMode(CENTER);
+      image(wallpic, wallx[i], wally[i] - (wallpic.height/2+100));
+      image(wallpic, wallx[i], wally[i] + (wallpic.height/2+100));
+      if(wallx[i] < 0) {
+        wally[i] = (int)random(200,height-200);
+        wallx[i] = width;
+      }
+      if(wallx[i] == width/2) highscore = max(++score, highscore);
+      if(y>height||y<0||(abs(width/2-wallx[i])<25 && abs(y-wally[i])>100)) game=1;
+      wallx[i] -= 6;
+    }
+    image(birdpic, width/2, y);
+    text("Score: "+score, 10, 50); //changed postion of the score count
+  }
+  else {
+    imageMode(CENTER);
+    image(welcomescreen, width/2,height/2);
+    text(" "+highscore, 80, 100); //changed the postion of the text. Original was 50,130 and had "highscore:"
+  }
+}
+void mousePressed() {
+  vertical = -17; //changed vertical from -15 to -12 to current to accommodate for angel size
+  if(game==1) {
+    wallx[0] = 600;
+    wally[0] = y = height/2;
+    wallx[1] = 900;
+    wally[1] = 600;
+    x = game = score = 0;
+  }
+}
